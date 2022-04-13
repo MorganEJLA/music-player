@@ -109,26 +109,51 @@ function updateProgressBar(e){
         //Update progress bar width 
         const progressPercent = (currentTime / duration) * 100;
         progress.style.width = `${progressPercent}%`;
-        //Calculate display duration
+        //Calculate display for duration
         const durationMin = Math.floor(duration / 60);
         console.log("minutes", durationMin);
         let durationSeconds = Math.floor(duration % 60);
         if(durationSeconds < 10) {
             durationSeconds = `0${durationSeconds}`;
         }
-        console.log("seconds", durationSeconds);
-        //delay switching duration element to avoid Nan
+        
+       
+        //delay switching duration element to avoid NaN
         if(durationSeconds){
             durationEl.textContent = `${durationMin}:${durationSeconds}`;
-          
         }
+        //Calculate display duration
+        const currentMin = Math.floor(currentTime / 60);
+        
+        let currentSeconds = Math.floor(currentTime % 60);
+        if(currentSeconds < 10) {
+            currentSeconds = `0${currentSeconds}`;
+        }
+        
+        
+        currentTimeEl.textContent = `${currentMin}:${currentSeconds}`;
   
 
     }
 
+}
+
+//Set Progress Bar
+
+function setProgressBar(e){
+    console.log(e);
+    const width = this.clientWidth;
+    console.log("width", width);
+    const clickX = e.offsetX;
+    console.log("clickX", clickX);
+    const { duration } = music;
+    console.log(clickX /width) 
+    console.log((clickX/width) * duration);
+    music.currentTime = (clickX /width) * duration;
 }
 //Event Listeners
 
 prevBtn.addEventListener("click", prevSong);
 nextBtn.addEventListener("click",nextSong);
 music.addEventListener("timeupdate", updateProgressBar);
+progressContainer.addEventListener("click", setProgressBar);
