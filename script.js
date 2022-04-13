@@ -2,6 +2,10 @@ const image = document.querySelector("img");
 const title = document.querySelector("#title");
 const artist = document.querySelector("#artist");
 const music = document.querySelector("audio");
+const progressContainer = document.querySelector("#progress-container");
+const progress = document.querySelector("#progress");
+const currentTimeEl = document.querySelector("#current-time");
+const durationEl = document.querySelector("#duration");
 const prevBtn = document.querySelector("#prev");
 const playBtn = document.querySelector("#play");
 const nextBtn = document.querySelector("#next");
@@ -27,8 +31,8 @@ const songs = [
     },
     {
         name: "metric-1",
-        displayName: "Metric",
-        artist: "Jacinto Design",
+        displayName: "Front Row (Remix)",
+        artist: "Metric/Jacinto Design",
     },
 
 ];
@@ -75,7 +79,7 @@ function prevSong(){
     if(songIndex < 0 ){
         songIndex = songs.length -1;
     }
-    console.log(songIndex);
+   
     loadSong(songs[songIndex]);
     playSong();
 }
@@ -86,7 +90,7 @@ function nextSong(){
     if(songIndex > songs.length - 1){
         songIndex = 0;
     }
-    console.log(songIndex);
+  
     loadSong(songs[songIndex]);
     playSong();
 }
@@ -94,8 +98,37 @@ function nextSong(){
 //On Load - Select First Song
 
 loadSong(songs[songIndex]);
+//Update Progress Bar & Time 
 
+function updateProgressBar(e){
+    if(isPlaying){
+        const {
+            duration, currentTime
+        } = e.srcElement;
+       
+        //Update progress bar width 
+        const progressPercent = (currentTime / duration) * 100;
+        progress.style.width = `${progressPercent}%`;
+        //Calculate display duration
+        const durationMin = Math.floor(duration / 60);
+        console.log("minutes", durationMin);
+        let durationSeconds = Math.floor(duration % 60);
+        if(durationSeconds < 10) {
+            durationSeconds = `0${durationSeconds}`;
+        }
+        console.log("seconds", durationSeconds);
+        //delay switching duration element to avoid Nan
+        if(durationSeconds){
+            durationEl.textContent = `${durationMin}:${durationSeconds}`;
+          
+        }
+  
+
+    }
+
+}
 //Event Listeners
 
 prevBtn.addEventListener("click", prevSong);
 nextBtn.addEventListener("click",nextSong);
+music.addEventListener("timeupdate", updateProgressBar);
